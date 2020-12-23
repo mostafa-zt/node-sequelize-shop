@@ -1,0 +1,66 @@
+<%- include('../partials/head.ejs') %>
+    </head>
+
+    <body>
+        <%- include('../partials/navigation.ejs') %>
+            <main>
+                <div class="container">
+                    <% if (cart.cartItems.length>0) { %>
+                    <div class="box__section cart_section">
+                        <div class="box__section_header order bold">Your Cart</div>
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <td class="text-center">Product Title</td>
+                                    <td class="text-center">Product Price</td>
+                                    <td class="text-center">Product Quantity</td>
+                                    <td class="text-center">Total Price</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for (let index=0; index < cart.cartItems.length; index++) { %>
+                                    <tr>
+                                        <td class="text-center productTitle__data">
+                                            <%= cart.cartItems[index].product.productTitle %>
+                                        </td>
+                                        <td class="text-center productPrice__data">
+                                            $<%= cart.cartItems[index].product.productPrice %>
+                                        </td>
+                                        <td class="text-center qty_col">
+                                            <div class="qty_data">
+                                                <%= cart.cartItems[index].productQuantity %>
+                                            </div>
+                                            <div data-val="<%= cart.cartItems[index].cartItemId %>"
+                                                id="decrement_qty__btn_<%= cart.cartItems[index].cartItemId %>"
+                                                class="decrement__qty__btn">
+                                            </div>
+                                        </td>
+                                        <td class="text-center productPriceInQty_data">
+                                            $<%= cart.cartItems[index].productPriceInQty %>
+                                        </td>
+                                    </tr>
+                                    <% }; %>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td id="totalPrice__cart" colspan="5">
+                                        $<%= cart.totalPriceCart %>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <a class="button button-success checkout__btn" href="/checkout/">Checkout >></a>
+                    </div>
+                    <% } else { %>
+                        <div class="box__section text-center">
+                            <h1>Your cart is empty!</h1>
+                        </div>
+                    <% } %>
+                </div>
+            </main>
+    </body>
+
+    </html>

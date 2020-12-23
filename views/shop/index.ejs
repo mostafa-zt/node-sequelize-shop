@@ -1,0 +1,71 @@
+<%- include('../partials/head.ejs') %>
+    </head>
+
+    <body>
+        <%- include('../partials/navigation.ejs') %>
+            <main>
+                <div class="container">
+                    <% if (products.length>0) { %>
+                        <div class="row">
+                            <% for (let product of products) { %>
+                                <div class="col col-md col-sm">
+                                    <div class="box" id="<%= product.productId %>">
+                                        <img src="<%= product.productImageUrl %>">
+                                        <div class="box-content">
+                                            <div class="prod__label productTitle">
+                                                <%= product.productTitle %>
+                                            </div>
+                                            <div class="prod__label productPrice">$<%= product.productPrice %>
+                                            </div>
+                                            <div class="prod__label">
+                                                <%= product.productDescription %>
+                                            </div>
+                                        </div>
+                                        <div class="actions__section">
+                                            <button data-val="<%= product.productId %>"
+                                                class="button button-success addToCart__Btn" type="button">Add To
+                                                Cart</button>
+                                            <a href="/product-detail/<%= product.productId %>/"
+                                                class="button button-success">Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% } %>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg">
+                                <div class="pagination">
+                                    <% if (numberOfPages > 1) { %>
+                                        <% if(hasFirstPage){ %>
+                                            <a href="/?page=<%= firstPage %>">  First Page </a>
+                                        <% } %>
+                                        <% if(hasPreviousPage){ %>
+                                            <a href="/?page=<%= previousPage %>">  Previous Page  </a>
+                                        <% } %>
+
+                                        <% for (let index = 0; index < numberOfPages; index++) { %>
+                                            <a class="<%= currenPage === (index + 1) ? 'active' : '' %>" href="/?page=<%= index + 1 %>"> <%= index + 1 %> </a>
+                                        <% } %>
+                                       
+                                        <% if(hasNextPage){ %>
+                                            <a href="/?page=<%= nextPage %>">  Next Page  </a>
+                                        <% } %>
+                                        <% if(hasLastPage){ %>
+                                            <a href="/?page=<%= lastPage %>">  Last Page </a>
+                                        <% } %>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <% } else {%>
+                            <div class="box__section text-center">
+                                <h1>There is no product!</h1>
+                                <div>New product is simply added through <b>Add Product</b> menu by a user authenticated!</div>
+                            </div>
+                        <% } %>
+                </div>
+            </main>
+    </body>
+
+    </html>

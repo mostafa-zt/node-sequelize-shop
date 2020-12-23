@@ -1,0 +1,53 @@
+<%- include('../partials/head.ejs') %>
+    </head>
+
+    <body>
+        <%- include('../partials/navigation.ejs') %>
+            <main>
+                <div class="container">
+                    <div class="box__section cart_section">
+                        <div class="box__section_header bold">Edit Product #<span><%= oldInputes.productTitle %></span></div>
+                        <% if(errorMessages && errorMessages.length> 0 ) { %>
+                            <div class="msg danger">
+                                <ul>
+                                    <% errorMessages.forEach(errorMessage=>{ %>
+                                        <li>
+                                            <span class="error__message_param">
+                                                <%= errorMessage.param %> :
+                                            </span> <span class="error__message_msg">
+                                                <%= errorMessage.msg %>
+                                            </span>
+                                        </li>
+                                        <% }) %>
+                                </ul>
+                            </div>
+                            <% } %>
+                                <form method="POST" action="/admin/edit-product" enctype="multipart/form-data">
+                                    <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+                                    <input type="hidden" value="<%= oldInputes.productId %>" name="productId" id="productId">
+                                    <label for="productTitle">Product Title</label>
+                                    <input
+                                        class="<%= errorMessages.find(e=>e.param ==='productTitle') ? 'hasError' :'' %>"
+                                        type="text" value="<%= oldInputes.productTitle %>" name="productTitle"
+                                        id="productTitle">
+                                    <label for="file">Product Image Url</label>
+                                    <input class="<%= errorMessages.find(e=>e.param ==='file') ? 'hasError' :'' %>"
+                                        type="file" name="file" id="file">
+                                    <label for="productPrice">Product Price</label>
+                                    <input
+                                        class="<%= errorMessages.find(e=>e.param ==='productPrice') ? 'hasError' :'' %>"
+                                        type="number" value="<%= oldInputes.productPrice %>" name="productPrice"
+                                        id="productPrice" step="0.01">
+                                    <label for="productDescription">Product Description</label>
+                                    <textarea
+                                        class="<%= errorMessages.find(e=>e.param ==='productDescription') ? 'hasError' :'' %>"
+                                        value="<%= oldInputes.productDescription %>" rows="5" name="productDescription"
+                                        id="productDescription"><%= oldInputes.productDescription %></textarea>
+                                    <button class="button button-success" type="submit">Edit Product</button>
+                                </form>
+                    </div>
+                </div>
+            </main>
+    </body>
+
+    </html>

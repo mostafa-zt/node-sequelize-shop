@@ -1,0 +1,42 @@
+<%- include('../partials/head.ejs') %>
+    </head>
+
+    <body>
+        <%- include('../partials/navigation.ejs') %>
+            <main>
+                <div class="container">
+                    <div class="box__section cart_section">
+                        <div class="box__section_header bold">Login</div>
+                        <% if(errorMessages && errorMessages.length> 0 ) { %>
+                            <div class="msg <%= isUserSignedupSuccessfully ? 'seccess' : 'danger' %>">
+                                <ul>
+                                    <% errorMessages.forEach(errorMessage=>{ %>
+                                        <li>
+                                            <span class="error__message_param">
+                                                <%= errorMessage.param %> :
+                                            </span> <span class="error__message_msg">
+                                                <%= errorMessage.msg %>
+                                            </span>
+                                        </li>
+                                        <% }) %>
+                                </ul>
+                            </div>
+                            <% } %>
+                                <form method="POST" action="/login/" novalidate>
+                                    <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+                                    <label for="email">Email</label>
+                                    <input
+                                        class="<%= errorMessages.find(e=>e.param ==='email') ? 'hasError' :'' %>"
+                                        type="email" name="email" id="email">
+                                    <label for="password">Password</label>
+                                    <input
+                                        class="<%= errorMessages.find(e=>e.param ==='password') ? 'hasError' :'' %>"
+                                        type="password" name="password" id="password">
+                                    <button class="button button-success btn__action" type="submit">Login</button>
+                                </form>
+                    </div>
+                </div>
+            </main>
+    </body>
+
+    </html>

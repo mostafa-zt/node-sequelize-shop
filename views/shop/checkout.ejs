@@ -1,0 +1,93 @@
+<%- include('../partials/head.ejs') %>
+    </head>
+
+    <body>
+        <%- include('../partials/navigation.ejs') %>
+            <main>
+                <div class="container">
+                    <% if (cart.cartItems.length> 0 ){ %>
+                        <div class="">
+                            <div class="box__section order_section">
+                                <div class="box__section_header order ">
+                                    <h1 class="box__section_title bold">Your Order</h1>
+                                    <a href="/cart/" class="button button-small button-success">Return to Edit Cart</a>
+                                </div>
+                                <div class="order order__price bold"> <label>Order Price :</label> $<%=
+                                        cart.totalPriceCart %>
+                                </div>
+                                <% cart.cartItems.forEach(cartItem=>{ %>
+                                    <div class="box__section_item">
+                                        <div class="order_item bold"><label>Product Title :</label>
+                                            <%= cartItem.product.productTitle %>
+                                        </div>
+                                        <div class="order_item"><label>Product Description :</label>
+                                            <%= cartItem.product.productDescription %>
+                                        </div>
+                                        <div class="order_item"><label>Product Price :</label> $<%=
+                                                cartItem.product.productPrice %>
+                                        </div>
+                                        <div class="order_item quantity"><label>Product QTY :</label>
+                                            <%= cartItem.productQuantity %>
+                                        </div>
+                                        <div class="order_item totalPrice"><label></label> $<%=
+                                                cartItem.productPriceInQty %>
+                                        </div>
+                                        <div class="order_item image"><img src="<%= cartItem.product.productImageUrl %>"
+                                                width="50" height="60"></div>
+                                    </div>
+                                    <% }) %>
+                                        <div class="box__subsection">
+                                            <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+                                            <label for="orderName">Name</label>
+                                            <input type="text" name="orderName" id="orderName">
+                                            <label for="orderAddress">Order Address</label>
+                                            <input type="text" name="orderAddress" id="orderAddress">
+                                            <label for="orderPhone">Phone Number</label>
+                                            <input type="text" name="orderPhone" id="orderPhone">
+                                            <button class="button button-success order__btn" id="orderBtn"
+                                                type="button">Order</button>
+                                        </div>
+                            </div>
+                        </div>
+                        <% } else { %>
+                            <div class="box__section text-center">
+                                <h1>Your cart is empty!</h1>
+                            </div>
+                            <% } %>
+                </div>
+            </main>
+            <script src="https://js.stripe.com/v3/"></script>
+            <script>
+                var stripe = Stripe('pk_test_51HyqDyB64RoBKGh8ATKnLuiGwvO3dHBKHkVK8yE5qHGDotbfrbv8vUxdOf9aetQCwuW8y7wQF8xTXAcSpQcSy3mr00ZVlXLEbg');
+                var orderBtn = document.getElementById('orderBtn');
+                orderBtn.addEventListener('click', () => {
+                    const name = document.getElementById('orderName').value;
+                    const address = document.getElementById('orderAddress').value;
+                    const phone = document.getElementById('orderPhone').value;
+                    const csrf = document.querySelector('input[name="_csrf"]').value;
+                    fetch(`/checkout/?name=${name}&address=${address}&phone=${phone}`, {
+                        method: 'POST',
+                        headers: {
+                            'csrf-token': csrf
+                        }
+                    })
+                        .then(result => {
+                            return result.json();
+                        })
+                        .then(result => {
+                            if (result.success) {
+                                stripe.redirectToCheckout({
+                                    sessionId: result.sessionId,
+                                });
+                            }
+                            else {
+                                const alert = new Alert(AlertType.Warning, 'Please fill order information correctly!');
+                                alert.show();
+                            }
+                        })
+
+                })
+            </script>
+    </body>
+
+    </html>

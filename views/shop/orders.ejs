@@ -1,0 +1,40 @@
+<%- include('../partials/head.ejs') %>
+</head>
+
+<body>
+    <%- include('../partials/navigation.ejs') %>
+    <main>
+        <div class="container">
+            <% if (orders.length > 0 ){ %>
+            <div class="order_list">
+                <%  orders.forEach(order=>{ %>
+                <div class="box__section order_section">
+                    <div class="box__section_header order trackingNumber bold">#<%= order.orderTrackingNumber %> <a class="link" href="/invoice/<%= order.orderId %>" >Download Invoice</a></div>
+                    <div class="order"> <label>Name :</label> <%= order.orderName %></div>
+                    <div class="order"> <label>Address : </label> <%= order.orderAddress %></div>
+                    <div class="order"> <label>Phone Number : </label> <%= order.orderPhone %></div>
+                    <div class="order order__price bold"> <label>Order Price :</label> $<%= order.orderPrice %></div>
+                    <% order.orderItems.forEach(orderItem =>{ %>
+                            <div class="box__section_item">
+                                <div class="order_item bold"><label>Product Title :</label> <%= orderItem.productTitle %></div>
+                                <div class="order_item"><label>Product Description :</label> <%= orderItem.productDescription %></div>
+                                <div class="order_item"><label>Product Price :</label> $<%= orderItem.productPrice %></div>
+                                <div class="order_item quantity"><label>Product QTY :</label> <%= orderItem.productQuantity %></div>
+                                <div class="order_item totalPrice"><label></label> $<%= orderItem.productPriceInQty %></div>
+                                <div class="order_item image"><img src="<%= orderItem.productImageUrl %>" width="50" height="60"></div>
+                            </div>
+                    <% }) %>
+                </div>
+                <% }) %>
+            </div>
+            <% } else { %>
+                <div class="box__section text-center">
+                    <h1>There is not any purchase in order list!</h1>
+                    <div>You can simply order your first purchase</div>
+                </div>
+            <% } %>
+        </div>
+    </main>
+</body>
+
+</html>

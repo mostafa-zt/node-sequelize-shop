@@ -1,0 +1,29 @@
+<header>
+    <div class="container topnav" id="myTopnav">
+        <nav>
+            <ul>
+                <li><a class="<%= path==='/' ? 'active' :'' %>" href="/">Shop</a></li>
+                <li><a style="border-bottom: 0;" class="<%= path==='/cart/' ? 'active' :'' %>" href="/cart/">Cart</a>
+                    <span id="cart__box">
+                        <%= cartQuantity %>
+                    </span>
+                </li>
+                <li><a class="<%= path==='/order/' ? 'active' :'' %>" href="/order/">Orders</a></li>
+                <% if (isAuthenticated && isAdmin) { %>
+                    <li><a class="<%= path==='/admin/add-product/' ? 'active' :'' %>" href="/admin/add-product/">Add
+                            Product</a></li>
+                    <li><a class="<%= path==='/admin/products/' ? 'active' :'' %>" href="/admin/products/">Admin
+                            Products</a></li>
+                <% } %>
+                <% if (isAuthenticated) { %>
+                    <li class="right"><a href="/logout/">Logout</a></li> 
+                <% } else { %>
+                    <li class="right"><a class="<%= path==='/login/' ? 'active' :'' %>" href="/login/">Login</a></li>   
+                    <li class="right"><a class="<%= path==='/signup/' ? 'active' :'' %>" href="/signup/">Signup</a></li>
+                <% } %>
+
+            </ul>
+
+        </nav>
+    </div>
+</header>
