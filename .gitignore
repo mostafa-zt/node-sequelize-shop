@@ -1,4 +1,4 @@
 node_modules
-images/
-data/
-data/invoices
+images
+data
+data/invoices/
