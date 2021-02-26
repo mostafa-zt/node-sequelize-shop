@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const PDFDocument = require('pdfkit');
-const { check, validationResult, body } = require('express-validator');
 const stripe = require('stripe')('sk_test_51HyqDyB64RoBKGh8IU6zHriFpW17QZ7cnLsO8TMaYAiyg74hxdDSD9rKyt0m8xs9wFBbzcnUb0nPWr9Pj3Yan15600PU6kknKB');
 const Cart = require('../models/cart');
 const CartItem = require('../models/cartItem');
@@ -174,7 +173,6 @@ exports.addToCart = async (req, res, next) => {
         cartItem.quantity = newQTY;
         cartItem.save()
             .then(result => {
-                console.log(`result UPDATE CARTITEM = ${result}`);
                 return Cart.findOne({ where: { userId: user.userId }, include: CartItem });
             }).then(cart => {
                 cartQuantity = cart.cartItems.length
@@ -367,10 +365,10 @@ exports.getInvoice = (req, res, next) => {
         let yMoveTo = 0;
         let y = 200;
         order.orderItems.forEach(orderItem => {
-            doc.lineCap('round')
-                .moveTo(50, y)
-                .lineTo(600, y)
-                .stroke("#afa79d").fillOpacity(0.8);
+            // doc.lineCap('round')
+            //     .moveTo(50, y)
+            //     .lineTo(600, y)
+            //     .stroke("#afa79d").fillOpacity(0.8);
             // .fillAndStroke("red", "#900");
             doc.fontSize(14).fillColor('black').text(`Product Title : ${orderItem.productTitle}`).moveDown(0.5);
             doc.fontSize(12).fillColor('black').text(`Product Description : ${orderItem.productDescription}`).moveDown(0.5);

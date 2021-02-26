@@ -21,10 +21,6 @@ body {
 .topnav nav {
   width: 100%;
   background-color: #3b6490;
-  /* margin-top: 1.4rem; */
-  /* margin-bottom: 1.0rem; */
-  /* margin-left: 3rem; */
-  /* margin-right: 3rem; */
   border-radius: 10px;
   box-shadow: inset 0 -3em 3em rgba(0, 0, 0, 0.1), 0 0 0 2px rgb(148 143 143),
     0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
@@ -179,6 +175,7 @@ textarea:focus {
   transition-duration: 0.5s;
 }
 
+/* 
 img {
   width: inherit;
   height: inherit;
@@ -186,13 +183,13 @@ img {
   border-top-right-radius: 15px;
   object-fit: cover;
   max-height: 250px;
-}
+} */
 
 .box {
   width: 100%;
   border: 3px solid #3b638f;
   border-radius: 15px;
-  min-height: 335px;
+  min-height: 485px;
   -moz-box-shadow: 3px 3px 5px 6px #ccc;
   -moz-box-shadow: inset 0 0 10px #000000;
   -moz-box-shadow: 5px 5px 5px rgba(68, 68, 68, 0.6);
@@ -222,7 +219,6 @@ img {
 #cart__box {
   border-radius: 50%;
   border: 1px solid white;
-  /* padding: 5px; */
   position: relative;
   left: 5px;
   background-color: #460404;
@@ -240,6 +236,14 @@ img {
 .prod__label {
   text-align: center;
   font-weight: bold;
+}
+
+.prod__label.limitaion{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .prod__label.productTitle {
@@ -383,10 +387,8 @@ img {
   -o-box-shadow: 1px 5px 10px #aaaaaa;
   -moz-box-shadow: 1px 5px 10px #aaaaaa;
   background-color: #63615ff0;
-  /* top: 15px; */
   z-index: 1;
   color: #e2d8d8;
-  /* left: 0px; */
   min-width: 351px;
   max-width: 400px;
 }
@@ -424,13 +426,9 @@ td {
 tr {
   border: 2px solid;
   padding: 42px;
-  /* border-radius: 18px; */
-  /* margin: 15px; */
   background-color: antiquewhite;
   border: 2px solid;
   padding: 42px;
-  /* border-radius: 18px; */
-  /* margin: 15px; */
   background-color: #e6e6e6;
   box-shadow: 1px 5px 10px #aaaaaa;
   -webkit-box-shadow: 1px 5px 10px #aaaaaa;
@@ -508,19 +506,16 @@ thead {
   float: right;
 }
 
-.order_item.image {
-  position: relative;
-}
-
 .order_item img {
-  position: absolute;
-  width: 120px;
+  position: relative;
+  width: 65px;
   right: 0;
-  transform: translate(0, -141%);
+  bottom: 55px;
+  opacity: 0.7;
   border-radius: 10px;
   border: 1px solid #ddd;
-  padding: 5px;
   float: right;
+  max-height: 80px;
 }
 
 .bold {
@@ -612,4 +607,32 @@ textarea.hasError {
 }
 .link:hover {
   color: #021830;
+}
+
+.image_box{
+  background-color: white;
+  text-align: center;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  height: 250px;
+}
+
+.image_box img{
+  width: inherit;
+  height: inherit;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  object-fit: cover;
+}
+
+.pre-line{
+  white-space: pre-line;
+}
+
+.three_line_limitation{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }

@@ -17,7 +17,7 @@ class AuthValidator {
                             }
                         });
                 })
-                .isLowercase().trim().normalizeEmail({ all_lowercase: true, gmail_remove_dots: false  }),
+                .isLowercase().trim(),
             body('password', 'Password is not valid! it should be between 5 and 10 character!')
                 .isLength({ min: 5, max: 10 })
                 .isAlphanumeric().withMessage('Password in not valid! it should contain alphabet and number!'),

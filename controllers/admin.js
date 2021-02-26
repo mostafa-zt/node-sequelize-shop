@@ -2,6 +2,8 @@ const path = require('path');
 const { check, validationResult, body } = require('express-validator');
 const Product = require('../models/product');
 const utility = require('../util/utility');
+const CartItem = require('../models/cartItem');
+const { Decimal } = require('mssql');
 
 exports.getAddProduct = (req, res, next) => {
     res.render('admin/add-product', {
@@ -18,7 +20,7 @@ exports.getAddProduct = (req, res, next) => {
 exports.postAddProduct = (req, res, next) => {
     const user = req.user;
     const productTitle = req.body.productTitle;
-    const productPrice = req.body.productPrice ? utility.formatMoney(req.body.productPrice) : null;
+    const productPrice = req.body.productPrice ?  parseFloat(req.body.productPrice) : null;
     const productDescription = req.body.productDescription;
     const image = req.file;
     let errors = validationResult(req).array();
@@ -89,7 +91,7 @@ exports.getEditProduct = (req, res, next) => {
 exports.postEditProduct = (req, res, next) => {
     const productId = req.body.productId;
     const productTitle = req.body.productTitle;
-    const productPrice = req.body.productPrice ? utility.formatMoney(req.body.productPrice) : null;
+    const productPrice = req.body.productPrice ? parseFloat(req.body.productPrice) : null;
     const productDescription = req.body.productDescription;
     const image = req.file;
     let errors = validationResult(req).array();
@@ -143,16 +145,30 @@ exports.getProductList = (req, res, next) => {
 exports.postRemoveProduct = (req, res, next) => {
     const productId = +req.params.productId;
     let productImageUrl;
-    Product.findByPk(productId)
+    CartItem.destroy({
+        where: {
+          productId : productId
+        }
+      }).then(result=>{
+        Product.findByPk(productId)
+            .then(product => {
+               return product;
+        })
         .then(product => {
             productImageUrl = product.productImageUrl;
             return product.destroy();
         })
-        .then(result => {
+        .then(result=>{
             utility.deleteFile(productImageUrl);
             res.status(200).json({ success: true });
         })
         .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
+      })
+      .catch(err => {
             const error = new Error(err);
             error.httpStatusCode = 500;
             return next(error);

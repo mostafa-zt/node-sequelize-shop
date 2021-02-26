@@ -15,7 +15,7 @@ function removeProduct(productId) {
     sendHttpRequest('GET', `/admin/removeProduct/${productId}`).then(responseData => {
         const productElement = document.getElementById(productId);
         if (responseData.success) {
-            productElement.remove();
+            productElement.parentElement.remove();
             const alert = new Alert(AlertType.Success, 'Product has been successfully deleted!');
             alert.show();
         }

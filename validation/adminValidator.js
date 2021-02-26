@@ -8,8 +8,8 @@ class AdminValidator {
                 .isLength({ min: 2, max: 250 }).trim(),
             body('productPrice', 'Price is not valid!')
                  .isFloat(),
-            body('productDescription', 'Description should be at least 2 character!')
-            .isLength({min: 2}).trim()
+            body('productDescription', 'Description can be at least 5 and maximum 1000 character')
+            .isLength({min: 5 ,max:1000}).trim()
         ]
     }
 }

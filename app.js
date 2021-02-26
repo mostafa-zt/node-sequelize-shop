@@ -104,8 +104,8 @@ app.set('views', 'views');
 Product.belongsTo(User, { foreignKey: { name: 'userId', allowNull: false }, constraints: true, onDelete: 'CASCADE' }); //OR
 User.hasMany(Product, { foreignKey: { name: 'userId', allowNull: false }, constraints: true, onDelete: 'CASCADE' });
 
-User.hasMany(Order, { foreignKey: { name: 'userId', allowNull: false }, constraints: true, onDelete: 'CASCADE' });
-Order.belongsTo(User, { foreignKey: { name: 'userId', allowNull: false }, constraints: true, onDelete: 'CASCADE' });
+User.hasMany(Order, { foreignKey: { name: 'userId', allowNull: false } });
+Order.belongsTo(User, { foreignKey: { name: 'userId', allowNull: false }});
 
 Order.hasMany(OrderItem, { foreignKey: { name: 'orderId', allowNull: false }, constraints: true, onDelete: 'CASCADE' });
 OrderItem.belongsTo(Order, { foreignKey: { name: 'orderId', allowNull: false }, constraints: true, onDelete: 'CASCADE' });
@@ -118,8 +118,8 @@ User.hasOne(Cart, { foreignKey: { name: 'userId', allowNull: false } });
 // Product.belongsToMany(Cart, { through: CartItem });
 
 // ONE TO MANY RELATIONSHIP => MANY TO MANY RELATIONSHIP
-CartItem.belongsTo(Product, { foreignKey: { name: 'productId', allowNull: false }, constraints: true });
-Product.hasMany(CartItem, { foreignKey: { name: 'productId', allowNull: false }, constraints: true });
+CartItem.belongsTo(Product, { foreignKey: { name: 'productId', allowNull: false }});
+Product.hasMany(CartItem, { foreignKey: { name: 'productId', allowNull: false }});
 
 CartItem.belongsTo(Cart, { foreignKey: { name: 'cartId', allowNull: false }, constraints: true, onDelete: 'CASCADE' });
 Cart.hasMany(CartItem, { foreignKey: { name: 'cartId', allowNull: false }, constraints: true, onDelete: 'CASCADE' });
@@ -129,15 +129,14 @@ sequelize
     .authenticate()
     // .sync({ force: true })
     .then(result => {
-        return User.findOne({ where: { userEmail: 'mostafa.zj@gmail.com' } });
-        // console.log(result);
+        return User.findOne({ where: { userEmail: 'admin@web.com' } });
     }).then(user => {
         if (!user) {
             return bcrypt.hash('123456', 6)
                 .then(hashedPass => {
                     return User.create({
-                        userName: 'mostafa',
-                        userEmail: 'mostafa.zj@gmail.com',
+                        userName: 'admin',
+                        userEmail: 'admin@web.com',
                         userPassword: hashedPass,
                         isAdmin: true,
                     })

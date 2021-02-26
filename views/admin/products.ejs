@@ -10,12 +10,14 @@
                 <% for (let product of products) { %>
                 <div class="col col-md col-sm">
                     <div class="box" id="<%= product.productId %>">
-                        <img src="<%= product.productImageUrl %>">
+                        <div class="image_box">
+                            <img src="<%= product.productImageUrl %>">
+                        </div>
                         <div class="box-content">
-                            <div class="prod__label productTitle"><%= product.productTitle %></div>
-                            <div class="prod__label productPrice">$<%= product.productPrice %></div>
-                            <div class="prod__label"><%= product.productAuthor %></div>
-                            <div class="prod__label"><%= product.productDescription %></div>
+                            <div class="prod__label productTitle limitaion"><%= product.productTitle %></div>
+                            <div class="prod__label productPrice limitaion">$<%= product.productPrice %></div>
+                            <div class="prod__label limitaion"><%= product.productAuthor %></div>
+                            <div class="prod__label limitaion"><%= product.productDescription %></div>
                         </div>
                         <div class="actions__section">
                             <a href="/admin/edit-product/<%= product.productId %>/" class="button button-success">Edit

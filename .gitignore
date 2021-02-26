@@ -1,4 +1,5 @@
-node_modules
-images
-data
-data/invoices/
+node_modules/
+images/
+data/
+.vscode/
+database.sqlite

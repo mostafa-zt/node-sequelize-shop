@@ -28,7 +28,8 @@ const CartItem = sequelize.define('cartItem', {
         type: DataTypes.INTEGER,
         references: {
             model: Product,
-            key: 'productId'
+            key: 'productId',
+            as:'productId'
         },
         allowNull: false,
     }

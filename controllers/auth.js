@@ -7,7 +7,6 @@ const utility = require('../util/utility');
 // sgMail.setApiKey('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');
 exports.getsignup = (req, res, next) => {
     const cartQuantity = req.cart;
-    console.log(req.session.isLoggedIn);
     res.render('auth/signup', {
         pageTitle: 'Signup',
         path: '/signup/',
