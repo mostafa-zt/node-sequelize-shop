@@ -287,7 +287,7 @@ exports.postCheckout = (req, res, next) => {
                         name: orderItem.productTitle,
                         amount: orderItem.productPrice * 100,
                         quantity: orderItem.productQuantity,
-                        description: orderItem.productDescription,
+                        // description: orderItem.productDescription,
                         currency: 'usd'
                     }
                 }),
