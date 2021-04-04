@@ -1,14 +1,13 @@
-const fs = require('fs');
-const path = require('path');
 const PDFDocument = require('pdfkit');
-const stripe = require('stripe')('sk_test_51HyqDyB64RoBKGh8IU6zHriFpW17QZ7cnLsO8TMaYAiyg74hxdDSD9rKyt0m8xs9wFBbzcnUb0nPWr9Pj3Yan15600PU6kknKB');
+const config = require('../config/config').get(process.env.NODE_ENV);
+const stripe = require('stripe')(config.STRIP_API);
 const Cart = require('../models/cart');
 const CartItem = require('../models/cartItem');
 const Order = require('../models/order');
 const OrderItem = require('../models/orderItems');
 const Product = require('../models/product');
 const utility = require('../util/utility');
-const User = require('../models/user');
+const cloudinary = require('cloudinary').v2;
 
 const ITEMS_PER_PAGE = 2;
 exports.getIndex = (req, res, next) => {
@@ -336,8 +335,8 @@ exports.getInvoice = (req, res, next) => {
     const cartQuantity = req.cart;
     const user = req.user;
     const orderId = +req.params.orderId;
-    const invoiceName = 'invoice' + '-' + orderId + '.pdf';
-    const invoicePath = path.join('data', 'invoices', invoiceName);
+    // const invoiceName = 'invoice' + '-' + orderId + '.pdf';
+    // const invoicePath = path.join('data', 'invoices', invoiceName);
     Order.findByPk(orderId, { include: OrderItem }).then(order => {
         if (!order) {
             return next(new Error('This invoice is not valid!'));
@@ -346,11 +345,13 @@ exports.getInvoice = (req, res, next) => {
             return next(new Error('User unauthorized!'));
         }
         const doc = new PDFDocument();
-        const file = fs.createWriteStream(invoicePath);
+
+        const fileUpload= cloudinary.uploader.upload_stream({ folder: 'invoice' });
+        // const file = fs.createWriteStream(invoicePath);
         res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'inline; filename ="' + invoiceName + '"');
-        doc.pipe(file);
-        doc.pipe(res);
+        res.setHeader('Content-Disposition', 'inline; filename =""');
+        doc.pipe(fileUpload);
+
         // Header
         doc.fontSize(25).text(`Invoice #${order.orderTrackingNumber}`);
         doc.lineCap('round')
@@ -390,6 +391,7 @@ exports.getInvoice = (req, res, next) => {
             // .fillAndStroke("red", "#900");
             y += 145;
         })
+        doc.pipe(res);
         doc.end();
     }).catch(err => {
         const error = new Error(err);

@@ -3,7 +3,7 @@ const { check, validationResult, body } = require('express-validator');
 const Product = require('../models/product');
 const utility = require('../util/utility');
 const CartItem = require('../models/cartItem');
-const { Decimal } = require('mssql');
+const cloudinaryUtility = require('../util/cloudinaryUtility');
 
 exports.getAddProduct = (req, res, next) => {
     res.render('admin/add-product', {
@@ -20,7 +20,7 @@ exports.getAddProduct = (req, res, next) => {
 exports.postAddProduct = (req, res, next) => {
     const user = req.user;
     const productTitle = req.body.productTitle;
-    const productPrice = req.body.productPrice ?  parseFloat(req.body.productPrice) : null;
+    const productPrice = req.body.productPrice ? parseFloat(req.body.productPrice) : null;
     const productDescription = req.body.productDescription;
     const image = req.file;
     let errors = validationResult(req).array();
@@ -54,24 +54,26 @@ exports.postAddProduct = (req, res, next) => {
             },
         });
     }
-    const imageUrl = path.join('/', image.path);
-    Product.create({
-        productTitle: productTitle,
-        productPrice: productPrice,
-        productDescription: productDescription,
-        productImageUrl: imageUrl,
-        userId: user.userId
-    })
-        .then(result => {
-            res.redirect('/admin/products/');
-        })
-        .catch(err => {
-            // const error = new Error(err);
-            // error.httpStatusCode = 500;
-            // return next(error);
-            console.log(err);
+    // const imageUrl = path.join('/', image.path);
+    cloudinaryUtility.streamUpload(image).then(result => {
+        return Product.create({
+            productTitle: productTitle,
+            productPrice: productPrice,
+            productDescription: productDescription,
+            productImageUrl: result.url,
+            productImagePublicId: result.public_id,
+            userId: user.userId
         });
+    }).then(result => {
+        res.redirect('/admin/products/');
+    }).catch(err => {
+        // const error = new Error(err);
+        // error.httpStatusCode = 500;
+        // return next(error);
+        console.log(err);
+    });
 };
+
 exports.getEditProduct = (req, res, next) => {
     const productId = req.params.productId;
     Product.findByPk(productId).then(product => {
@@ -108,18 +110,23 @@ exports.postEditProduct = (req, res, next) => {
             },
         });
     }
+    let product;
     Product.findByPk(productId)
-        .then(product => {
-            product.productTitle = productTitle;
-            product.productPrice = productPrice;
-            product.productDescription = productDescription;
+        .then(prod => {
+            prod.productTitle = productTitle;
+            prod.productPrice = productPrice;
+            prod.productDescription = productDescription;
+            product = prod;
             if (image) {
-                utility.deleteFile(product.productImageUrl);
-                const imageUrl = path.join('/', image.path);
-                product.productImageUrl = imageUrl;
+                cloudinaryUtility.removeFile(prod.productImagePublicId);
+                return cloudinaryUtility.streamUpload(image);
             }
-            return product.save();
         }).then(result => {
+            if (result) {
+                product.productImageUrl = result.url;
+                product.productImagePublicId = result.public_id;
+            }
+            product.save();
             res.redirect('/admin/products/');
         })
         .catch(err => {
@@ -144,31 +151,32 @@ exports.getProductList = (req, res, next) => {
 };
 exports.postRemoveProduct = (req, res, next) => {
     const productId = +req.params.productId;
-    let productImageUrl;
+    let productImagePublicId;
     CartItem.destroy({
         where: {
-          productId : productId
+            productId: productId
         }
-      }).then(result=>{
+    }).then(result => {
         Product.findByPk(productId)
             .then(product => {
-               return product;
-        })
-        .then(product => {
-            productImageUrl = product.productImageUrl;
-            return product.destroy();
-        })
-        .then(result=>{
-            utility.deleteFile(productImageUrl);
-            res.status(200).json({ success: true });
-        })
+                return product;
+            })
+            .then(product => {
+                productImagePublicId = product.productImagePublicId;
+                return product.destroy();
+            })
+            .then(result => {
+                // utility.deleteFile(productImageUrl);
+                cloudinaryUtility.removeFile(productImagePublicId);
+                res.status(200).json({ success: true });
+            })
+            .catch(err => {
+                const error = new Error(err);
+                error.httpStatusCode = 500;
+                return next(error);
+            });
+    })
         .catch(err => {
-            const error = new Error(err);
-            error.httpStatusCode = 500;
-            return next(error);
-        });
-      })
-      .catch(err => {
             const error = new Error(err);
             error.httpStatusCode = 500;
             return next(error);

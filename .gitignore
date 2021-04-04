@@ -3,3 +3,4 @@ images/
 data/
 .vscode/
 database.sqlite
+config.js

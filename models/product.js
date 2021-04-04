@@ -13,7 +13,7 @@ const Product = sequelize.define('product', {
         type: DataTypes.STRING
     },
     productPrice: {
-        type: DataTypes.DECIMAL(10,2),
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
     },
     productDescription: {
@@ -23,6 +23,10 @@ const Product = sequelize.define('product', {
     productImageUrl: {
         type: DataTypes.STRING,
         allowNull: false,
+    },
+    productImagePublicId: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
 });
 
